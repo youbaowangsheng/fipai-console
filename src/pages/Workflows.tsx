@@ -21,7 +21,8 @@ export default function Workflows() {
   const fetchWorkflows = () => {
     setLoading(true);
     getWorkflows().then(res => {
-      setWorkflows(res.data.workflows || mockWorkflows);
+      const workflowsData = res.data?.workflows ?? res.data ?? mockWorkflows;
+      setWorkflows(Array.isArray(workflowsData) ? workflowsData : mockWorkflows);
     }).catch(() => {
       setWorkflows(mockWorkflows);
     }).finally(() => setLoading(false));

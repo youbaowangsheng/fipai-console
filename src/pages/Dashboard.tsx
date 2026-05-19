@@ -41,12 +41,25 @@ export default function Dashboard() {
   const fetchData = async () => {
     try {
       const [statsRes, channelsRes] = await Promise.all([
-        getStats().catch(() => ({ data: { total_agents: 5, total_sessions: 128, active_users: 24, total_requests: 1024, success_rate: 98.5 } })),
-        getChannels().catch(() => ({ data: { channels: mockChannels } })),
+        getStats(),
+        getChannels(),
       ]);
 
-      setStats(statsRes.data);
-      setChannels(channelsRes.data.channels?.length ? channelsRes.data.channels : mockChannels);
+      // Handle stats response - API returns { total_agents, total_sessions, active_users, ... } directly
+      const statsData = statsRes.data;
+      if (statsData && typeof statsData === 'object') {
+        setStats({
+          total_agents: statsData.total_agents ?? statsData.total_agents ?? 5,
+          total_sessions: statsData.total_sessions ?? statsData.sessions ?? 128,
+          active_users: statsData.active_users ?? statsData.users ?? 24,
+          total_requests: statsData.total_requests ?? 1024,
+          success_rate: statsData.success_rate ?? 98.5,
+        });
+      }
+
+      // Handle channels response - API returns { channels: [...] }
+      const channelsData = channelsRes.data?.channels ?? channelsRes.data ?? mockChannels;
+      setChannels(Array.isArray(channelsData) ? channelsData : mockChannels);
 
       const now = new Date();
       const timeStr = now.toLocaleTimeString().slice(3);

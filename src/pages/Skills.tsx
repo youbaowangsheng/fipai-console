@@ -36,7 +36,8 @@ export default function Skills() {
   const fetchSkills = () => {
     setLoading(true);
     getSkills().then(res => {
-      setSkills(res.data.skills || mockSkills);
+      const skillsData = res.data?.skills ?? res.data ?? mockSkills;
+      setSkills(Array.isArray(skillsData) ? skillsData : mockSkills);
     }).catch(() => {
       setSkills(mockSkills);
     }).finally(() => setLoading(false));

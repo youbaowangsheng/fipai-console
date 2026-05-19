@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Card, Table, Tag, Spin, Button, Space, Typography, Badge } from 'antd';
 import { ReloadOutlined, PlusOutlined, EyeOutlined, EditOutlined, RobotOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import { getAgents } from '../utils/api';
 import type { Agent } from '../types';
 
 const { Title } = Typography;
@@ -29,10 +30,12 @@ export default function Agents() {
 
   const fetchAgents = () => {
     setLoading(true);
-    setTimeout(() => {
+    getAgents().then(res => {
+      const agentsData = res.data?.agents ?? res.data ?? mockAgents;
+      setAgents(Array.isArray(agentsData) ? agentsData : mockAgents);
+    }).catch(() => {
       setAgents(mockAgents);
-      setLoading(false);
-    }, 300);
+    }).finally(() => setLoading(false));
   };
 
   useEffect(() => {

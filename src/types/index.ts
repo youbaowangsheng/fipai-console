@@ -31,7 +31,7 @@ export interface WorkflowStep {
 export interface Channel {
   name: string;
   location: string;
-  health: boolean;
+  health: boolean | 'ok' | 'error';
 }
 
 export interface Stats {
