@@ -78,9 +78,9 @@ export default function Sidebar({ children }: SidebarProps) {
 
   return (
     <Layout style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Layout.Header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#001529', padding: '0 32px', flex: '0 0 auto' }}>
-        <div style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>
-          FIP.AI Console
+      <Layout.Header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%)', padding: '0 32px', flex: '0 0 auto' }}>
+        <div style={{ color: '#fff', fontSize: 20, fontWeight: 'bold', letterSpacing: 1 }}>
+          🍳 FIP.AI Console
         </div>
         <Dropdown menu={userMenu} placement="bottomRight">
           <Button type="text" style={{ color: '#fff' }}>
@@ -92,17 +92,17 @@ export default function Sidebar({ children }: SidebarProps) {
         </Dropdown>
       </Layout.Header>
       <Layout>
-        <Layout.Sider width={240} style={{ background: '#001529', flex: '0 0 240px' }}>
+        <Layout.Sider width={280} style={{ background: '#1a1a2e', flex: '0 0 280px' }}>
           <Menu
             theme="dark"
             mode="inline"
             selectedKeys={[location.pathname]}
             onClick={({ key }) => navigate(key)}
             items={menuItems}
-            style={{ height: '100%', overflow: 'auto' }}
+            style={{ height: '100%', overflow: 'auto', background: '#1a1a2e' }}
           />
         </Layout.Sider>
-        <Layout.Content style={{ background: '#f0f2f5', padding: 24, flex: 'auto', minWidth: 0 }}>
+        <Layout.Content style={{ background: '#fffaf5', padding: 24, flex: 'auto', minWidth: 0 }}>
           {children}
         </Layout.Content>
       </Layout>

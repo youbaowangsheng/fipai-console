@@ -66,7 +66,7 @@ export default function Workflows() {
   ];
 
   return (
-    <div style={{ padding: 24, background: "#f0f2f5" }}>
+    <div style={{ padding: 24, background: "#fffaf5" }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
         <Title level={4} style={{ margin: 0, color: '#262626' }}>工作流</Title>
         <Space>

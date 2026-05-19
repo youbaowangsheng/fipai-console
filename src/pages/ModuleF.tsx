@@ -110,7 +110,7 @@ export default function ModuleF() {
   const totalUsed = budgets.reduce((sum, b) => sum + b.used, 0);
 
   return (
-    <div style={{ padding: 24, background: "#f0f2f5" }}>
+    <div style={{ padding: 24, background: "#fffaf5" }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
         <div>
           <Title level={4} style={{ margin: 0 }}>Module F - 权限与预算</Title>

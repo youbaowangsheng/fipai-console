@@ -98,7 +98,7 @@ export default function ModuleA() {
   ];
 
   return (
-    <div style={{ padding: 24, background: "#f0f2f5" }}>
+    <div style={{ padding: 24, background: "#fffaf5" }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
         <div>
           <Title level={4} style={{ margin: 0 }}>Module A - 调度与路由</Title>

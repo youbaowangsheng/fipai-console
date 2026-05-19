@@ -78,7 +78,7 @@ export default function ModuleB() {
   ];
 
   return (
-    <div style={{ padding: 24, background: "#f0f2f5" }}>
+    <div style={{ padding: 24, background: "#fffaf5" }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
         <div>
           <Title level={4} style={{ margin: 0 }}>Module B - 记忆与上下文</Title>

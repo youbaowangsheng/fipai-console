@@ -102,7 +102,7 @@ export default function RuntimeOverview() {
   const navigate = useNavigate();
 
   return (
-    <div style={{ padding: 24, background: "#f0f2f5" }}>
+    <div style={{ padding: 24, background: "#fffaf5" }}>
       <div style={{ marginBottom: 24 }}>
         <Title level={4} style={{ margin: 0 }}>运行时管理 - 总览</Title>
         <Text type="secondary">核心运行时层模块监控与配置</Text>

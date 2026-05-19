@@ -171,7 +171,7 @@ export default function Auth({ onLogin }: Props) {
   }
 
   return (
-    <div style={{ padding: 24, background: "#f0f2f5" }}>
+    <div style={{ padding: 24, background: "#fffaf5" }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
         <Title level={4} style={{ margin: 0 }}>用户权限管理</Title>
         <Button icon={<LogoutOutlined />} onClick={handleLogout}>退出登录</Button>
