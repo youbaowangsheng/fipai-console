@@ -1,11 +1,11 @@
-import { Layout, Menu, Button, Dropdown, Avatar } from 'antd';
+import { Layout, Menu, Button, Dropdown, Avatar, Switch } from 'antd';
 import type { MenuProps } from 'antd';
 import {
   DashboardOutlined, RobotOutlined, ThunderboltOutlined, SettingOutlined,
   MessageOutlined, ApiOutlined, ExperimentOutlined, UserOutlined, SafetyOutlined,
   LogoutOutlined, FileTextOutlined, ClockCircleOutlined, SyncOutlined,
   DatabaseOutlined, ApartmentOutlined, ClusterOutlined,
-  UnorderedListOutlined, CommentOutlined, BookOutlined
+  UnorderedListOutlined, CommentOutlined, BookOutlined, SunOutlined, MoonOutlined
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState, type ReactNode } from 'react';
@@ -14,6 +14,8 @@ import { getUserInfo } from '../utils/api';
 interface SidebarProps {
   children: ReactNode;
 }
+
+type Theme = 'dark' | 'light';
 
 const workbenchItems: MenuProps['items'] = [
   { key: '/', icon: <DashboardOutlined />, label: '监控面板' },
@@ -50,10 +52,27 @@ const menuItems: MenuProps['items'] = [
   { label: '系统', key: 'system', icon: <SettingOutlined />, children: systemItems },
 ];
 
+const themes = {
+  dark: {
+    sidebarBg: '#1a1a2e',
+    headerBg: 'linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%)',
+    contentBg: '#fffaf5',
+    headerText: '#fff',
+  },
+  light: {
+    sidebarBg: '#f8f9fa',
+    headerBg: '#fff',
+    contentBg: '#f5f7fa',
+    headerText: '#333',
+    border: '#e8e8e8',
+  },
+};
+
 export default function Sidebar({ children }: SidebarProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const [user, setUser] = useState<any>(null);
+  const [theme, setTheme] = useState<Theme>('dark');
 
   useEffect(() => {
     const token = localStorage.getItem('console_token');
@@ -64,10 +83,18 @@ export default function Sidebar({ children }: SidebarProps) {
     }
   }, []);
 
+  const handleThemeChange = (checked: boolean) => {
+    const newTheme = checked ? 'light' : 'dark';
+    setTheme(newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('console_token');
     navigate('/auth', { replace: true });
   };
+
+  const currentTheme = themes[theme];
 
   const userMenu = {
     items: [
@@ -78,31 +105,46 @@ export default function Sidebar({ children }: SidebarProps) {
 
   return (
     <Layout style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Layout.Header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%)', padding: '0 32px', flex: '0 0 auto' }}>
-        <div style={{ color: '#fff', fontSize: 20, fontWeight: 'bold', letterSpacing: 1 }}>
+      <Layout.Header style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        background: currentTheme.headerBg, padding: '0 32px', flex: '0 0 auto',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+        borderBottom: theme === 'light' ? '1px solid #e8e8e8' : 'none'
+      }}>
+        <div style={{ color: currentTheme.headerText, fontSize: 20, fontWeight: 'bold', letterSpacing: 1 }}>
           🍳 FIP.AI Console
         </div>
-        <Dropdown menu={userMenu} placement="bottomRight">
-          <Button type="text" style={{ color: '#fff' }}>
-            <Avatar size="small" style={{ backgroundColor: '#1890ff', marginRight: 8 }}>
-              {user?.email?.charAt(0).toUpperCase() || 'U'}
-            </Avatar>
-            {user?.email || '用户'}
-          </Button>
-        </Dropdown>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: currentTheme.headerText }}>
+            <SunOutlined style={{ fontSize: 14 }} />
+            <Switch size="small" checked={theme === 'light'} onChange={handleThemeChange} />
+            <MoonOutlined style={{ fontSize: 14 }} />
+          </div>
+          <Dropdown menu={userMenu} placement="bottomRight">
+            <Button type="text" style={{ color: currentTheme.headerText }}>
+              <Avatar size="small" style={{ backgroundColor: '#ff6b35', marginRight: 8 }}>
+                {user?.email?.charAt(0).toUpperCase() || 'U'}
+              </Avatar>
+              {user?.email || '用户'}
+            </Button>
+          </Dropdown>
+        </div>
       </Layout.Header>
       <Layout>
-        <Layout.Sider width={280} style={{ background: '#1a1a2e', flex: '0 0 280px' }}>
+        <Layout.Sider width={320} style={{
+          background: currentTheme.sidebarBg, flex: '0 0 320px',
+          borderRight: theme === 'light' ? '1px solid #e8e8e8' : 'none'
+        }}>
           <Menu
-            theme="dark"
+            theme={theme}
             mode="inline"
             selectedKeys={[location.pathname]}
             onClick={({ key }) => navigate(key)}
             items={menuItems}
-            style={{ height: '100%', overflow: 'auto', background: '#1a1a2e' }}
+            style={{ height: '100%', overflow: 'auto', background: currentTheme.sidebarBg }}
           />
         </Layout.Sider>
-        <Layout.Content style={{ background: '#fffaf5', padding: 24, flex: 'auto', minWidth: 0 }}>
+        <Layout.Content style={{ background: currentTheme.contentBg, padding: 24, flex: 'auto', minWidth: 0 }}>
           {children}
         </Layout.Content>
       </Layout>
