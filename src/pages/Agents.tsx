@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Card, Table, Tag, Spin, Button, Space, Typography, Badge } from 'antd';
+import { Card, Table, Tag, Spin, Button, Space, Typography, Badge, Empty } from 'antd';
 import { ReloadOutlined, PlusOutlined, EyeOutlined, EditOutlined, RobotOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { getAgents } from '../utils/api';
@@ -114,6 +114,7 @@ export default function Agents() {
             columns={columns}
             rowKey="id"
             pagination={{ pageSize: 10, showSizeChanger: true, showTotal: (total: number) => `共 ${total} 条` }}
+            locale={{ emptyText: <Empty description="暂无 Agent 数据" image={Empty.PRESENTED_IMAGE_SIMPLE} /> }}
           />
         )}
       </Card>

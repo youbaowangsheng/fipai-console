@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
   Card, Table, Tag, Button, Space, Typography, Switch, Input, Select,
-  Modal, Form, message, Alert
+  Modal, Form, message, Alert, Empty
 } from 'antd';
 import {
   PlusOutlined, ReloadOutlined, DeleteOutlined
@@ -118,7 +118,7 @@ export default function ModuleA() {
       />
 
       <Card styles={{ body: { padding: 0 } }}>
-        <Table dataSource={rules} columns={columns} rowKey="id" pagination={false} />
+        <Table dataSource={rules} columns={columns} rowKey="id" pagination={false} locale={{ emptyText: <Empty description="暂无路由规则" image={Empty.PRESENTED_IMAGE_SIMPLE} /> }} />
       </Card>
 
       <Modal title="新建路由规则" open={modalOpen} onCancel={() => setModalOpen(false)} footer={null}>

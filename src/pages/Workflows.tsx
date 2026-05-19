@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Card, Table, Tag, Spin, Button, Space, Typography } from 'antd';
+import { Card, Table, Tag, Spin, Button, Space, Typography, Empty } from 'antd';
 import { ReloadOutlined, PlusOutlined, EyeOutlined, RocketOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { getWorkflows } from '../utils/api';
@@ -85,6 +85,7 @@ export default function Workflows() {
             columns={columns}
             rowKey="workflow_id"
             pagination={{ pageSize: 10, showSizeChanger: true, showTotal: (total: number) => `共 ${total} 条` }}
+            locale={{ emptyText: <Empty description="暂无 Workflow 数据" image={Empty.PRESENTED_IMAGE_SIMPLE} /> }}
           />
         )}
       </Card>

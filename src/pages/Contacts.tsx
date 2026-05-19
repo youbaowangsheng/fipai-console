@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Card, Table, Tag, Spin, Button, message } from 'antd';
+import { Card, Table, Tag, Spin, Button, message, Empty } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 import { getContacts } from '../utils/api';
 import type { Contact } from '../types';
@@ -53,7 +53,7 @@ export default function Contacts() {
         {loading && contacts.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 40 }}><Spin /></div>
         ) : contacts.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: 40, color: '#999' }}>暂无联系记录</div>
+          <Empty description="暂无联系记录" image={Empty.PRESENTED_IMAGE_SIMPLE} />
         ) : (
           <Table
             dataSource={contacts}

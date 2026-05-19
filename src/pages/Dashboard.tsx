@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { Card, Row, Col, Spin, Button, Space, Table, Tag, Typography, Badge } from 'antd';
+import { Card, Row, Col, Spin, Button, Space, Table, Tag, Typography, Badge, Empty } from 'antd';
 import { ArrowUpOutlined, ReloadOutlined, SyncOutlined, CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 import { getStats, getChannels } from '../utils/api';
@@ -303,7 +303,7 @@ export default function Dashboard() {
                   rowKey="id"
                   pagination={false}
                   scroll={{ y: 260 }}
-                  locale={{ emptyText: '暂无日志' }}
+                  locale={{ emptyText: <Empty description="暂无日志" image={Empty.PRESENTED_IMAGE_SIMPLE} /> }}
                 />
               </Card>
             </Col>

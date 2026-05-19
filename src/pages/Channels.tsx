@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Card, Table, Switch, Button, Space, Tag, message, Modal, Form, Input, Slider, Typography, Alert } from 'antd';
+import { Card, Table, Switch, Button, Space, Tag, message, Modal, Form, Input, Slider, Typography, Alert, Empty } from 'antd';
 import { ReloadOutlined, EditOutlined, ApiOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import { getChannels, getRouteExplain } from '../utils/api';
 
@@ -238,6 +238,7 @@ export default function Channels() {
           rowKey="name"
           pagination={false}
           loading={loading}
+          locale={{ emptyText: <Empty description="暂无通道配置" image={Empty.PRESENTED_IMAGE_SIMPLE} /> }}
         />
       </Card>
 

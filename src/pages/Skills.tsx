@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Card, Table, Tag, Spin, Button, Modal, Input, message, Space, Typography } from 'antd';
+import { Card, Table, Tag, Spin, Button, Modal, Input, message, Space, Typography, Empty } from 'antd';
 import { ReloadOutlined, PlayCircleOutlined, PlusOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { getSkills, invokeSkill } from '../utils/api';
@@ -117,6 +117,7 @@ export default function Skills() {
             columns={columns}
             rowKey="name"
             pagination={{ pageSize: 10, showSizeChanger: true, showTotal: (total: number) => `共 ${total} 条` }}
+            locale={{ emptyText: <Empty description="暂无 Skill 数据" image={Empty.PRESENTED_IMAGE_SIMPLE} /> }}
           />
         )}
       </Card>
