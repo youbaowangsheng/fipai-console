@@ -194,7 +194,7 @@ export default function Channels() {
   ];
 
   return (
-    <div style={{ padding: 24, background: '#f0f2f5', minHeight: '100vh' }}>
+    <div style={{ padding: 24, background: "#f0f2f5" }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
         <Space direction="vertical" size={0}>
           <Title level={4} style={{ margin: 0, color: '#262626' }}><ApiOutlined /> 通道路由配置</Title>
