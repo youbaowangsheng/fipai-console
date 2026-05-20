@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Card, Table, Tag, Button, Space, Typography, Badge, Empty, Skeleton, Input } from 'antd';
-import { ReloadOutlined, PlusOutlined, EyeOutlined, EditOutlined, RobotOutlined } from '@ant-design/icons';
+import { Card, Table, Tag, Button, Space, Typography, Badge, Empty, Skeleton, Input, Modal, message } from 'antd';
+import { ReloadOutlined, PlusOutlined, EyeOutlined, EditOutlined, RobotOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { getAgents } from '../utils/api';
+import { getAgents, deleteAgent } from '../utils/api';
 import type { Agent } from '../types';
 
 const { Title } = Typography;
@@ -27,6 +27,7 @@ export default function Agents() {
   const [agents, setAgents] = useState<Agent[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState('');
+  const [deleteLoading, setDeleteLoading] = useState<number | null>(null);
   const navigate = useNavigate();
 
   const fetchAgents = () => {
@@ -42,6 +43,28 @@ export default function Agents() {
   useEffect(() => {
     fetchAgents();
   }, []);
+
+  const handleDelete = (id: number) => {
+    Modal.confirm({
+      title: '确认删除',
+      content: '确定要删除这个 Agent 吗？此操作不可撤销。',
+      okText: '删除',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk: async () => {
+        setDeleteLoading(id);
+        try {
+          await deleteAgent(id);
+          setAgents(prev => prev.filter(a => a.id !== id));
+          message.success('删除成功');
+        } catch {
+          // Error handled by API interceptor
+        } finally {
+          setDeleteLoading(null);
+        }
+      },
+    });
+  };
 
   const filteredAgents = agents.filter(agent =>
     agent.name.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -91,11 +114,12 @@ export default function Agents() {
     {
       title: '操作',
       key: 'action',
-      width: 160,
+      width: 180,
       render: (_: any, record: Agent) => (
         <Space size={4}>
           <Button size="small" type="text" icon={<EyeOutlined />} onClick={() => navigate(`/agents/${record.id}`)}>详情</Button>
           <Button size="small" type="text" icon={<EditOutlined />} onClick={() => navigate(`/agents/${record.id}/edit`)}>编辑</Button>
+          <Button size="small" type="text" danger icon={<DeleteOutlined />} loading={deleteLoading === record.id} onClick={() => handleDelete(record.id)}>删除</Button>
         </Space>
       ),
     },

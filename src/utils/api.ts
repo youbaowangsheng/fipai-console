@@ -91,6 +91,11 @@ export const getWorkflows = () => api.get('/channels/workflows/');
 
 // Agent
 export const getAgents = () => api.get('/agents/');
+export const createAgent = (data: { name: string; agent_type: string; description?: string; capabilities?: string[] }) =>
+  api.post('/agents/', data);
+export const updateAgent = (id: number, data: { name?: string; agent_type?: string; is_active?: boolean; description?: string }) =>
+  api.put(`/agents/${id}/`, data);
+export const deleteAgent = (id: number) => api.delete(`/agents/${id}/`);
 
 // 联系销售
 export const getContacts = () => api.get('/contact/');

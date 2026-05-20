@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card, Form, Input, Select, Button, Space, Typography, message } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useState } from 'react';
+import { createAgent } from '../utils/api';
 
 const { Title } = Typography;
 
@@ -10,15 +11,14 @@ export default function AgentNew() {
   const [form] = Form.useForm();
   const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (values: { name: string; agent_type: string; description?: string }) => {
     try {
       setSubmitting(true);
-      // Simulate API call - replace with actual API later
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await createAgent(values);
       message.success('Agent 创建成功');
       navigate('/agents');
     } catch {
-      message.error('创建失败，请重试');
+      // Error handled by API interceptor
     } finally {
       setSubmitting(false);
     }
