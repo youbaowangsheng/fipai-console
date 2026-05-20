@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Card, Table, Tag, Spin, Button, Modal, Input, message, Space, Typography, Empty } from 'antd';
+import { Card, Table, Tag, Button, Modal, Input, message, Space, Typography, Empty, Skeleton } from 'antd';
 import { ReloadOutlined, PlayCircleOutlined, PlusOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { getSkills, invokeSkill } from '../utils/api';
@@ -110,7 +110,7 @@ export default function Skills() {
 
       <Card style={{ borderRadius: 8, boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }} bordered={false}>
         {loading ? (
-          <div style={{ textAlign: 'center', padding: 60 }}><Spin /></div>
+          <Card style={{ borderRadius: 8 }}><Skeleton active paragraph={{ rows: 8 }} /></Card>
         ) : (
           <Table
             dataSource={skills}

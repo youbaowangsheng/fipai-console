@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { Card, Row, Col, Spin, Button, Space, Table, Tag, Typography, Badge, Empty } from 'antd';
+import { Card, Row, Col, Button, Space, Table, Tag, Typography, Badge, Empty, Skeleton } from 'antd';
 import { ArrowUpOutlined, ReloadOutlined, SyncOutlined, CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 import { getStats, getChannels } from '../utils/api';
@@ -151,7 +151,23 @@ export default function Dashboard() {
         </Space>
       </div>
 
-      {loading ? <div style={{ textAlign: 'center', padding: 60 }}><Spin size="large" /></div> : (
+      {loading ? (
+        <div style={{ padding: 24 }}>
+          <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
+            {[1,2,3,4].map(i => (
+              <Col span={6} key={i}><Card style={{ borderRadius: 8 }}><Skeleton active paragraph={{ rows: 1 }} /></Card></Col>
+            ))}
+          </Row>
+          <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
+            <Col span={12}><Card style={{ borderRadius: 8, height: 240 }}><Skeleton active paragraph={{ rows: 6 }} /></Card></Col>
+            <Col span={12}><Card style={{ borderRadius: 8, height: 240 }}><Skeleton active paragraph={{ rows: 6 }} /></Card></Col>
+          </Row>
+          <Row gutter={[16, 16]}>
+            <Col span={8}><Card style={{ borderRadius: 8, height: 300 }}><Skeleton active paragraph={{ rows: 8 }} /></Card></Col>
+            <Col span={16}><Card style={{ borderRadius: 8, height: 300 }}><Skeleton active paragraph={{ rows: 8 }} /></Card></Col>
+          </Row>
+        </div>
+      ) : (
         <>
           <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
             <Col span={6}>
