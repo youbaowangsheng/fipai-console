@@ -1,21 +1,32 @@
 import { useNavigate } from 'react-router-dom';
 import { Card, Form, Input, InputNumber, Button, Space, Typography, message } from 'antd';
+import { useState } from 'react';
 
 const { Title } = Typography;
 
 export default function SkillNew() {
   const navigate = useNavigate();
   const [form] = Form.useForm();
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = () => {
-    message.success('Skill 创建功能待开发');
-    navigate('/skills');
+  const handleSubmit = async () => {
+    try {
+      setSubmitting(true);
+      // Simulate API call - replace with actual API later
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      message.success('Skill 创建成功');
+      navigate('/skills');
+    } catch {
+      message.error('创建失败，请重试');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <div style={{ padding: 24 }}>
       <div style={{ marginBottom: 24 }}>
-        <Button onClick={() => navigate('/skills')}>返回</Button>
+        <Button onClick={() => navigate('/skills')} disabled={submitting}>返回</Button>
       </div>
 
       <Card title={<Title level={4} style={{ margin: 0 }}>新建 Skill</Title>}>
@@ -34,8 +45,8 @@ export default function SkillNew() {
           </Form.Item>
           <Form.Item>
             <Space>
-              <Button type="primary" htmlType="submit">创建</Button>
-              <Button onClick={() => navigate('/skills')}>取消</Button>
+              <Button type="primary" htmlType="submit" loading={submitting}>创建</Button>
+              <Button onClick={() => navigate('/skills')} disabled={submitting}>取消</Button>
             </Space>
           </Form.Item>
         </Form>

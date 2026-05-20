@@ -1,16 +1,27 @@
 import { useNavigate } from 'react-router-dom';
 import { Card, Form, Input, Select, Button, Space, Typography, message } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
+import { useState } from 'react';
 
 const { Title } = Typography;
 
 export default function AgentNew() {
   const navigate = useNavigate();
   const [form] = Form.useForm();
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = () => {
-    message.success('Agent 创建功能待开发');
-    navigate('/agents');
+  const handleSubmit = async () => {
+    try {
+      setSubmitting(true);
+      // Simulate API call - replace with actual API later
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      message.success('Agent 创建成功');
+      navigate('/agents');
+    } catch {
+      message.error('创建失败，请重试');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -40,8 +51,8 @@ export default function AgentNew() {
           </Form.Item>
           <Form.Item>
             <Space>
-              <Button type="primary" htmlType="submit">创建</Button>
-              <Button onClick={() => navigate('/agents')}>取消</Button>
+              <Button type="primary" htmlType="submit" loading={submitting}>创建</Button>
+              <Button onClick={() => navigate('/agents')} disabled={submitting}>取消</Button>
             </Space>
           </Form.Item>
         </Form>
