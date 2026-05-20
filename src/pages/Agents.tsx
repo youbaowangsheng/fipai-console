@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Card, Table, Tag, Button, Space, Typography, Badge, Empty, Skeleton } from 'antd';
+import { Card, Table, Tag, Button, Space, Typography, Badge, Empty, Skeleton, Input } from 'antd';
 import { ReloadOutlined, PlusOutlined, EyeOutlined, EditOutlined, RobotOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { getAgents } from '../utils/api';
@@ -26,6 +26,7 @@ const typeColors: Record<string, string> = {
 export default function Agents() {
   const [agents, setAgents] = useState<Agent[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchText, setSearchText] = useState('');
   const navigate = useNavigate();
 
   const fetchAgents = () => {
@@ -41,6 +42,11 @@ export default function Agents() {
   useEffect(() => {
     fetchAgents();
   }, []);
+
+  const filteredAgents = agents.filter(agent =>
+    agent.name.toLowerCase().includes(searchText.toLowerCase()) ||
+    agent.agent_type.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   const columns = [
     { title: 'ID', dataIndex: 'id', key: 'id', width: 60 },
@@ -100,6 +106,7 @@ export default function Agents() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
         <Title level={4} style={{ margin: 0, color: '#262626' }}>Agent 管理</Title>
         <Space>
+          <Input placeholder="搜索名称/类型" value={searchText} onChange={e => setSearchText(e.target.value)} style={{ width: 180 }} allowClear size="small" />
           <Button icon={<ReloadOutlined />} onClick={fetchAgents} size="small">刷新</Button>
           <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate('/agents/new')} size="small">新建 Agent</Button>
         </Space>
@@ -110,7 +117,7 @@ export default function Agents() {
           <Card style={{ borderRadius: 8 }}><Skeleton active paragraph={{ rows: 8 }} /></Card>
         ) : (
           <Table
-            dataSource={agents}
+            dataSource={filteredAgents}
             columns={columns}
             rowKey="id"
             pagination={{ pageSize: 10, showSizeChanger: true, showTotal: (total: number) => `共 ${total} 条` }}

@@ -31,6 +31,7 @@ export default function Skills() {
   const [invokeResult, setInvokeResult] = useState<any>(null);
   const [invoking, setInvoking] = useState(false);
   const [skillInput, setSkillInput] = useState('');
+  const [searchText, setSearchText] = useState('');
   const navigate = useNavigate();
 
   const fetchSkills = () => {
@@ -46,6 +47,11 @@ export default function Skills() {
   useEffect(() => {
     fetchSkills();
   }, []);
+
+  const filteredSkills = skills.filter(skill =>
+    skill.name.toLowerCase().includes(searchText.toLowerCase()) ||
+    skill.description.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   const handleInvoke = () => {
     if (!selectedSkill || !skillInput) return;
@@ -103,6 +109,7 @@ export default function Skills() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
         <Title level={4} style={{ margin: 0, color: '#262626' }}>Skill 列表</Title>
         <Space>
+          <Input placeholder="搜索名称/描述" value={searchText} onChange={e => setSearchText(e.target.value)} style={{ width: 180 }} allowClear size="small" />
           <Button icon={<ReloadOutlined />} onClick={fetchSkills} size="small">刷新</Button>
           <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate('/skills/new')} size="small">新建 Skill</Button>
         </Space>
@@ -113,7 +120,7 @@ export default function Skills() {
           <Card style={{ borderRadius: 8 }}><Skeleton active paragraph={{ rows: 8 }} /></Card>
         ) : (
           <Table
-            dataSource={skills}
+            dataSource={filteredSkills}
             columns={columns}
             rowKey="name"
             pagination={{ pageSize: 10, showSizeChanger: true, showTotal: (total: number) => `共 ${total} 条` }}

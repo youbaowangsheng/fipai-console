@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Card, Table, Tag, Button, Space, Typography, Empty, Skeleton } from 'antd';
+import { Card, Table, Tag, Button, Space, Typography, Empty, Skeleton, Input } from 'antd';
 import { ReloadOutlined, PlusOutlined, EyeOutlined, RocketOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { getWorkflows } from '../utils/api';
@@ -16,6 +16,7 @@ const mockWorkflows: Workflow[] = [
 export default function Workflows() {
   const [workflows, setWorkflows] = useState<Workflow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchText, setSearchText] = useState('');
   const navigate = useNavigate();
 
   const fetchWorkflows = () => {
@@ -31,6 +32,11 @@ export default function Workflows() {
   useEffect(() => {
     fetchWorkflows();
   }, []);
+
+  const filteredWorkflows = workflows.filter(wf =>
+    wf.name.toLowerCase().includes(searchText.toLowerCase()) ||
+    wf.description.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   const columns = [
     { title: 'ID', dataIndex: 'workflow_id', key: 'workflow_id', width: 100 },
@@ -71,6 +77,7 @@ export default function Workflows() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
         <Title level={4} style={{ margin: 0, color: '#262626' }}>工作流</Title>
         <Space>
+          <Input placeholder="搜索名称/描述" value={searchText} onChange={e => setSearchText(e.target.value)} style={{ width: 180 }} allowClear size="small" />
           <Button icon={<ReloadOutlined />} onClick={fetchWorkflows} size="small">刷新</Button>
           <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate('/workflows/new')} size="small">新建工作流</Button>
         </Space>
@@ -81,7 +88,7 @@ export default function Workflows() {
           <Card style={{ borderRadius: 8 }}><Skeleton active paragraph={{ rows: 8 }} /></Card>
         ) : (
           <Table
-            dataSource={workflows}
+            dataSource={filteredWorkflows}
             columns={columns}
             rowKey="workflow_id"
             pagination={{ pageSize: 10, showSizeChanger: true, showTotal: (total: number) => `共 ${total} 条` }}
