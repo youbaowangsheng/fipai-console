@@ -6,7 +6,7 @@ import {
   LogoutOutlined, FileTextOutlined, ClockCircleOutlined, SyncOutlined,
   DatabaseOutlined, ApartmentOutlined, ClusterOutlined,
   UnorderedListOutlined, CommentOutlined, BookOutlined, SunOutlined, MoonOutlined,
-  HomeOutlined
+  HomeOutlined, MenuOutlined
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState, type ReactNode } from 'react';
@@ -74,6 +74,19 @@ export default function Sidebar({ children }: SidebarProps) {
   const location = useLocation();
   const [user, setUser] = useState<any>(null);
   const [theme, setTheme] = useState<Theme>('dark');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      if (window.innerWidth >= 768) {
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem('console_token');
@@ -140,44 +153,76 @@ export default function Sidebar({ children }: SidebarProps) {
     <Layout style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Layout.Header style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        background: currentTheme.headerBg, padding: '0 32px', flex: '0 0 auto',
+        background: currentTheme.headerBg, padding: '0 16px', flex: '0 0 auto',
         boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
         borderBottom: theme === 'light' ? '1px solid #e8e8e8' : 'none'
       }}>
-        <div style={{ color: currentTheme.headerText, fontSize: 20, fontWeight: 'bold', letterSpacing: 1 }}>
-          🍳 FIP.AI Console
+        {isMobile && (
+          <Button
+            type="text"
+            icon={<MenuOutlined />}
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            style={{ color: currentTheme.headerText }}
+          />
+        )}
+        <div style={{ color: currentTheme.headerText, fontSize: 18, fontWeight: 'bold', letterSpacing: 1 }}>
+          {isMobile ? '🍳 FIP.AI' : '🍳 FIP.AI Console'}
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: currentTheme.headerText }}>
-            <SunOutlined style={{ fontSize: 14 }} />
-            <Switch size="small" checked={theme === 'light'} onChange={handleThemeChange} />
-            <MoonOutlined style={{ fontSize: 14 }} />
-          </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          {!isMobile && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: currentTheme.headerText }}>
+              <SunOutlined style={{ fontSize: 14 }} />
+              <Switch size="small" checked={theme === 'light'} onChange={handleThemeChange} />
+              <MoonOutlined style={{ fontSize: 14 }} />
+            </div>
+          )}
           <Dropdown menu={userMenu} placement="bottomRight">
             <Button type="text" style={{ color: currentTheme.headerText }}>
               <Avatar size="small" style={{ backgroundColor: '#ff6b35', marginRight: 8 }}>
                 {user?.email?.charAt(0).toUpperCase() || 'U'}
               </Avatar>
-              {user?.email || '用户'}
+              {!isMobile && (user?.email || '用户')}
             </Button>
           </Dropdown>
         </div>
       </Layout.Header>
       <Layout>
-        <Layout.Sider width={320} style={{
-          background: currentTheme.sidebarBg, flex: '0 0 320px',
-          borderRight: theme === 'light' ? '1px solid #e8e8e8' : 'none'
-        }}>
+        <Layout.Sider
+          width={320}
+          style={{
+            background: currentTheme.sidebarBg, flex: '0 0 320px',
+            borderRight: theme === 'light' ? '1px solid #e8e8e8' : 'none',
+            position: isMobile ? 'absolute' : 'relative',
+            zIndex: 10,
+            height: isMobile ? 'calc(100vh - 64px)' : 'auto',
+            display: mobileMenuOpen || !isMobile ? 'block' : 'none',
+            left: 0,
+            top: 0,
+          }}
+          className="mobile-sider"
+        >
           <Menu
             theme={theme}
             mode="inline"
             selectedKeys={[location.pathname]}
-            onClick={({ key }) => navigate(key)}
+            onClick={({ key }) => { navigate(key); setMobileMenuOpen(false); }}
             items={menuItems}
             style={{ height: '100%', overflow: 'auto', background: currentTheme.sidebarBg }}
           />
         </Layout.Sider>
-        <Layout.Content style={{ background: currentTheme.contentBg, padding: 24, flex: 'auto', minWidth: 0 }}>
+        {isMobile && mobileMenuOpen && (
+          <div
+            style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.45)', zIndex: 9 }}
+            onClick={() => setMobileMenuOpen(false)}
+          />
+        )}
+        <Layout.Content style={{
+          background: currentTheme.contentBg,
+          padding: isMobile ? 16 : 24,
+          flex: 'auto',
+          minWidth: 0,
+          marginLeft: isMobile ? 0 : undefined
+        }}>
           <Breadcrumb style={{ marginBottom: 16 }} items={breadcrumbItems} />
           {children}
         </Layout.Content>

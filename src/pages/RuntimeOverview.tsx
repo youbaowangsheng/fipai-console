@@ -110,7 +110,7 @@ export default function RuntimeOverview() {
 
       <Row gutter={[16, 16]}>
         {modules.map(mod => (
-          <Col span={8} key={mod.key}>
+          <Col xs={24} sm={12} lg={8} key={mod.key}>
             <Card
               hoverable
               style={{ borderRadius: 12, cursor: 'pointer' }}

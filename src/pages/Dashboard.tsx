@@ -155,22 +155,22 @@ export default function Dashboard() {
         <div style={{ padding: 24 }}>
           <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
             {[1,2,3,4].map(i => (
-              <Col span={6} key={i}><Card style={{ borderRadius: 8 }}><Skeleton active paragraph={{ rows: 1 }} /></Card></Col>
+              <Col xs={24} sm={12} md={6} key={i}><Card style={{ borderRadius: 8 }}><Skeleton active paragraph={{ rows: 1 }} /></Card></Col>
             ))}
           </Row>
           <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
-            <Col span={12}><Card style={{ borderRadius: 8, height: 240 }}><Skeleton active paragraph={{ rows: 6 }} /></Card></Col>
-            <Col span={12}><Card style={{ borderRadius: 8, height: 240 }}><Skeleton active paragraph={{ rows: 6 }} /></Card></Col>
+            <Col xs={24} lg={12}><Card style={{ borderRadius: 8, height: 240 }}><Skeleton active paragraph={{ rows: 6 }} /></Card></Col>
+            <Col xs={24} lg={12}><Card style={{ borderRadius: 8, height: 240 }}><Skeleton active paragraph={{ rows: 6 }} /></Card></Col>
           </Row>
           <Row gutter={[16, 16]}>
-            <Col span={8}><Card style={{ borderRadius: 8, height: 300 }}><Skeleton active paragraph={{ rows: 8 }} /></Card></Col>
-            <Col span={16}><Card style={{ borderRadius: 8, height: 300 }}><Skeleton active paragraph={{ rows: 8 }} /></Card></Col>
+            <Col xs={24} lg={8}><Card style={{ borderRadius: 8, height: 300 }}><Skeleton active paragraph={{ rows: 8 }} /></Card></Col>
+            <Col xs={24} lg={16}><Card style={{ borderRadius: 8, height: 300 }}><Skeleton active paragraph={{ rows: 8 }} /></Card></Col>
           </Row>
         </div>
       ) : (
         <>
           <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
-            <Col span={6}>
+            <Col xs={24} sm={12} md={6}>
               <Card style={{ borderRadius: 8, boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }} bordered={false}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <div style={{ width: 48, height: 48, borderRadius: 8, background: '#e6f7ff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -183,7 +183,7 @@ export default function Dashboard() {
                 </div>
               </Card>
             </Col>
-            <Col span={6}>
+            <Col xs={24} sm={12} md={6}>
               <Card style={{ borderRadius: 8, boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }} bordered={false}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <div style={{ width: 48, height: 48, borderRadius: 8, background: '#f6ffed', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -196,7 +196,7 @@ export default function Dashboard() {
                 </div>
               </Card>
             </Col>
-            <Col span={6}>
+            <Col xs={24} sm={12} md={6}>
               <Card style={{ borderRadius: 8, boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }} bordered={false}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <div style={{ width: 48, height: 48, borderRadius: 8, background: '#fff7e6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -209,7 +209,7 @@ export default function Dashboard() {
                 </div>
               </Card>
             </Col>
-            <Col span={6}>
+            <Col xs={24} sm={12} md={6}>
               <Card style={{ borderRadius: 8, boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }} bordered={false}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <div style={{ width: 48, height: 48, borderRadius: 8, background: onlineCount === channels.length ? '#f6ffed' : '#fff2f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -225,7 +225,7 @@ export default function Dashboard() {
           </Row>
 
           <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
-            <Col span={12}>
+            <Col xs={24} lg={12}>
               <Card title="请求趋势" size="small" style={{ borderRadius: 8, boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }} bordered={false}>
                 {requestData.length === 0 ? (
                   <div style={{ textAlign: 'center', padding: 40, color: '#999' }}>暂无数据</div>
@@ -248,7 +248,7 @@ export default function Dashboard() {
                 )}
               </Card>
             </Col>
-            <Col span={12}>
+            <Col xs={24} lg={12}>
               <Card title="延迟趋势 (ms)" size="small" style={{ borderRadius: 8, boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }} bordered={false}>
                 {latencyData.length === 0 ? (
                   <div style={{ textAlign: 'center', padding: 40, color: '#999' }}>暂无数据</div>
@@ -268,7 +268,7 @@ export default function Dashboard() {
           </Row>
 
           <Row gutter={[16, 16]}>
-            <Col span={8}>
+            <Col xs={24} lg={8}>
               <Card title="通道状态" size="small" style={{ borderRadius: 8, boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }} bordered={false}>
                 {channels.length === 0 ? (
                   <div style={{ textAlign: 'center', padding: 40, color: '#999' }}>暂无数据</div>
@@ -304,7 +304,7 @@ export default function Dashboard() {
                 )}
               </Card>
             </Col>
-            <Col span={16}>
+            <Col xs={24} lg={16}>
               <Card
                 title={<Space>实时日志 <Tag color={realtimeMode ? 'green' : 'default'}>{realtimeMode ? '实时' : '静止'}</Tag></Space>}
                 size="small"
