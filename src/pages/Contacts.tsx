@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Card, Table, Tag, Spin, Button, message, Empty } from 'antd';
+import { Card, Table, Tag, Button, Empty, Skeleton } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 import { getContacts } from '../utils/api';
 import type { Contact } from '../types';
@@ -14,7 +14,7 @@ export default function Contacts() {
       const data = Array.isArray(res.data) ? res.data : res.data.contacts || [];
       setContacts(data);
     }).catch(err => {
-      message.error('获取联系列表失败: ' + (err.response?.data?.error || err.message));
+      console.error('Failed to fetch contacts:', err);
       setContacts([]);
     }).finally(() => setLoading(false));
   };
@@ -51,7 +51,7 @@ export default function Contacts() {
 
       <Card>
         {loading && contacts.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: 40 }}><Spin /></div>
+          <Card><Skeleton active paragraph={{ rows: 8 }} /></Card>
         ) : contacts.length === 0 ? (
           <Empty description="暂无联系记录" image={Empty.PRESENTED_IMAGE_SIMPLE} />
         ) : (

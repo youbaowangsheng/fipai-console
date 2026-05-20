@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { message } from 'antd';
 
 // API 配置 - 根据环境自动选择
 const API_BASE = import.meta.env.VITE_API_BASE || 'https://console.fipai.cn/api';
@@ -25,6 +26,35 @@ const gwApi = axios.create({
   },
 });
 
+// 统一错误处理函数
+export const handleApiError = (error: any, fallbackMsg?: string): string => {
+  if (error.response) {
+    const status = error.response.status;
+    const data = error.response.data;
+
+    switch (status) {
+      case 400:
+        return data?.error || data?.message || '请求参数错误';
+      case 401:
+        localStorage.removeItem('console_token');
+        window.location.href = '/auth';
+        return '登录已过期，请重新登录';
+      case 403:
+        return '没有权限执行此操作';
+      case 404:
+        return data?.error || data?.message || '请求的资源不存在';
+      case 500:
+        return '服务器内部错误，请稍后重试';
+      default:
+        return data?.error || data?.message || fallbackMsg || '请求失败';
+    }
+  } else if (error.request) {
+    return '网络连接失败，请检查网络';
+  } else {
+    return error.message || fallbackMsg || '请求失败';
+  }
+};
+
 // 响应拦截器 - 添加 token
 api.interceptors.request.use(config => {
   const token = localStorage.getItem('console_token');
@@ -38,10 +68,8 @@ api.interceptors.request.use(config => {
 api.interceptors.response.use(
   response => response,
   error => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('console_token');
-      window.location.href = '/auth';
-    }
+    const errorMsg = handleApiError(error);
+    message.error(errorMsg);
     return Promise.reject(error);
   }
 );
