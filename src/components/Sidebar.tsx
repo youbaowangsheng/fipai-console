@@ -1,11 +1,12 @@
-import { Layout, Menu, Button, Dropdown, Avatar, Switch } from 'antd';
+import { Layout, Menu, Button, Dropdown, Avatar, Switch, Breadcrumb } from 'antd';
 import type { MenuProps } from 'antd';
 import {
   DashboardOutlined, RobotOutlined, ThunderboltOutlined, SettingOutlined,
   MessageOutlined, ApiOutlined, ExperimentOutlined, UserOutlined, SafetyOutlined,
   LogoutOutlined, FileTextOutlined, ClockCircleOutlined, SyncOutlined,
   DatabaseOutlined, ApartmentOutlined, ClusterOutlined,
-  UnorderedListOutlined, CommentOutlined, BookOutlined, SunOutlined, MoonOutlined
+  UnorderedListOutlined, CommentOutlined, BookOutlined, SunOutlined, MoonOutlined,
+  HomeOutlined
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState, type ReactNode } from 'react';
@@ -103,6 +104,38 @@ export default function Sidebar({ children }: SidebarProps) {
     onClick: () => handleLogout(),
   };
 
+  // Breadcrumb mapping
+  const pathMap: Record<string, { label: string; parent?: string }> = {
+    '/': { label: '监控面板' },
+    '/agents': { label: 'Agent 管理' },
+    '/agents/new': { label: '新建 Agent', parent: '/agents' },
+    '/prompt-editor': { label: 'Prompt 编辑器' },
+    '/trigger-config': { label: '触发配置' },
+    '/runtime': { label: '模块总览' },
+    '/runtime/module-a': { label: '调度与路由', parent: '/runtime' },
+    '/runtime/module-b': { label: '记忆与上下文', parent: '/runtime' },
+    '/runtime/module-c': { label: '协作编排', parent: '/runtime' },
+    '/runtime/module-d': { label: '版本管理', parent: '/runtime' },
+    '/runtime/module-e': { label: '反馈优化', parent: '/runtime' },
+    '/runtime/module-f': { label: '权限与预算', parent: '/runtime' },
+    '/documentation': { label: '文档中心' },
+    '/skills': { label: 'Skill 列表' },
+    '/skills/new': { label: '新建 Skill', parent: '/skills' },
+    '/workflows': { label: '工作流' },
+    '/channels': { label: '通道路由' },
+    '/api-test': { label: 'API 测试' },
+    '/auth': { label: '用户权限' },
+    '/system': { label: '模型配置' },
+    '/settings': { label: '系统设置' },
+  };
+
+  const currentPath = pathMap[location.pathname] || { label: location.pathname };
+  const breadcrumbItems = [
+    { title: <HomeOutlined />, href: '/' },
+    ...(currentPath.parent ? [{ title: pathMap[currentPath.parent]?.label || currentPath.parent, href: currentPath.parent }] : []),
+    { title: currentPath.label },
+  ];
+
   return (
     <Layout style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Layout.Header style={{
@@ -145,6 +178,7 @@ export default function Sidebar({ children }: SidebarProps) {
           />
         </Layout.Sider>
         <Layout.Content style={{ background: currentTheme.contentBg, padding: 24, flex: 'auto', minWidth: 0 }}>
+          <Breadcrumb style={{ marginBottom: 16 }} items={breadcrumbItems} />
           {children}
         </Layout.Content>
       </Layout>
