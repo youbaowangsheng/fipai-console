@@ -88,6 +88,11 @@ export const invokeSkill = (skill_name: string, input: Record<string, any>) =>
 
 // 工作流
 export const getWorkflows = () => api.get('/channels/workflows/');
+export const createWorkflow = (data: { name: string; description?: string; graph_data?: any }) =>
+  api.post('/workflows/save/', data);
+export const updateWorkflow = (id: number, data: { name?: string; description?: string; graph_data?: any }) =>
+  api.put(`/workflows/save/`, { workflow_id: id, ...data });
+export const deleteWorkflow = (id: number | string) => api.delete(`/workflows/${id}/`);
 
 // Agent
 export const getAgents = () => api.get('/agents/');

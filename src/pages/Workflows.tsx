@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Card, Table, Tag, Button, Space, Typography, Empty, Skeleton, Input } from 'antd';
-import { ReloadOutlined, PlusOutlined, EyeOutlined, RocketOutlined } from '@ant-design/icons';
+import { Card, Table, Tag, Button, Space, Typography, Empty, Skeleton, Input, Modal, message } from 'antd';
+import { ReloadOutlined, PlusOutlined, EyeOutlined, RocketOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { getWorkflows } from '../utils/api';
+import { getWorkflows, deleteWorkflow } from '../utils/api';
 import type { Workflow } from '../types';
 
 const { Title } = Typography;
@@ -17,6 +17,7 @@ export default function Workflows() {
   const [workflows, setWorkflows] = useState<Workflow[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState('');
+  const [deleteLoading, setDeleteLoading] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const fetchWorkflows = () => {
@@ -32,6 +33,28 @@ export default function Workflows() {
   useEffect(() => {
     fetchWorkflows();
   }, []);
+
+  const handleDelete = (id: string) => {
+    Modal.confirm({
+      title: '确认删除',
+      content: '确定要删除这个工作流吗？此操作不可撤销。',
+      okText: '删除',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk: async () => {
+        setDeleteLoading(id);
+        try {
+          await deleteWorkflow(id);
+          setWorkflows(prev => prev.filter(w => w.workflow_id !== id));
+          message.success('删除成功');
+        } catch {
+          // Error handled by API interceptor
+        } finally {
+          setDeleteLoading(null);
+        }
+      },
+    });
+  };
 
   const filteredWorkflows = workflows.filter(wf =>
     wf.name.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -63,11 +86,16 @@ export default function Workflows() {
     {
       title: '操作',
       key: 'action',
-      width: 100,
+      width: 180,
       render: (_: any, record: Workflow) => (
-        <Button size="small" type="primary" icon={<EyeOutlined />} onClick={() => navigate(`/workflows/${record.workflow_id}`)}>
-          详情
-        </Button>
+        <Space size={4}>
+          <Button size="small" type="primary" icon={<EyeOutlined />} onClick={() => navigate(`/workflows/${record.workflow_id}`)}>
+            详情
+          </Button>
+          <Button size="small" type="text" danger icon={<DeleteOutlined />} loading={deleteLoading === record.workflow_id} onClick={() => handleDelete(record.workflow_id)}>
+            删除
+          </Button>
+        </Space>
       ),
     },
   ];
