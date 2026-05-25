@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Card, Table, Tag, Button, Space, Typography, Badge, Empty, Skeleton, Input, Modal, message } from 'antd';
-import { ReloadOutlined, PlusOutlined, EyeOutlined, EditOutlined, RobotOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Card, Table, Tag, Button, Space, Typography, Badge, Empty, Skeleton, Input, Modal, message, Divider } from 'antd';
+import { ReloadOutlined, PlusOutlined, EyeOutlined, EditOutlined, RobotOutlined, DeleteOutlined, TeamOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { getAgents, deleteAgent } from '../utils/api';
+import { getBusinessAgents } from '../utils/ranbingApi';
 import type { Agent } from '../types';
 
 const { Title } = Typography;
@@ -25,6 +26,7 @@ const typeColors: Record<string, string> = {
 
 export default function Agents() {
   const [agents, setAgents] = useState<Agent[]>([]);
+  const [businessAgents, setBusinessAgents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState('');
   const [deleteLoading, setDeleteLoading] = useState<number | null>(null);
@@ -32,11 +34,14 @@ export default function Agents() {
 
   const fetchAgents = () => {
     setLoading(true);
-    getAgents().then(res => {
-      const agentsData = res.data?.agents ?? res.data ?? mockAgents;
+    Promise.all([
+      getAgents().catch(() => ({ data: mockAgents })),
+      getBusinessAgents().catch(() => ({ data: [] })),
+    ]).then(([agentsRes, businessRes]) => {
+      const agentsData = agentsRes.data?.agents ?? agentsRes.data ?? mockAgents;
       setAgents(Array.isArray(agentsData) ? agentsData : mockAgents);
-    }).catch(() => {
-      setAgents(mockAgents);
+      const bizData = businessRes.data?.agents ?? businessRes.data ?? [];
+      setBusinessAgents(Array.isArray(bizData) ? bizData : []);
     }).finally(() => setLoading(false));
   };
 
@@ -149,6 +154,30 @@ export default function Agents() {
           />
         )}
       </Card>
+
+      {businessAgents.length > 0 && (
+        <>
+          <Divider orientation="left">
+            <Space><TeamOutlined />燃冰业务 Agent</Space>
+          </Divider>
+          <Card style={{ borderRadius: 8, boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }} bordered={false}>
+            <Table
+              dataSource={businessAgents}
+              rowKey="id"
+              pagination={false}
+              size="small"
+              columns={[
+                { title: 'ID', dataIndex: 'id', key: 'id', width: 60 },
+                { title: '名称', dataIndex: 'agent_name', key: 'agent_name', width: 150 },
+                { title: '类型', dataIndex: 'agent_type', key: 'agent_type', width: 110, render: (t: string) => <Tag color="blue">{t}</Tag> },
+                { title: '描述', dataIndex: 'description', key: 'description', ellipsis: true },
+                { title: '状态', dataIndex: 'is_active', key: 'is_active', width: 80, render: (v: boolean) => v ? <Badge status="success" text="启用" /> : <Badge status="default" text="停用" /> },
+              ]}
+              locale={{ emptyText: <Empty description="暂无业务 Agent" image={Empty.PRESENTED_IMAGE_SIMPLE} /> }}
+            />
+          </Card>
+        </>
+      )}
     </div>
   );
 }
