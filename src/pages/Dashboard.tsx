@@ -3,6 +3,7 @@ import { Card, Row, Col, Button, Space, Table, Tag, Typography, Badge, Empty, Sk
 import { ArrowUpOutlined, ReloadOutlined, SyncOutlined, CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 import { getStats, getChannels } from '../utils/api';
+import { getDashboardStats, getBusinessAgents } from '../utils/ranbingApi';
 
 const { Title, Text } = Typography;
 const COLORS = ['#52c41a', '#ff4d4f'];
@@ -34,15 +35,17 @@ export default function Dashboard() {
   const [metrics, setMetrics] = useState<MetricPoint[]>([]);
   const [channels, setChannels] = useState<any[]>([]);
   const [stats, setStats] = useState({ total_agents: 5, total_sessions: 128, active_users: 24, total_requests: 1024, success_rate: 98.5 });
+  const [ranbingStats, setRanbingStats] = useState<any>(null);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [realtimeMode, setRealtimeMode] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const fetchData = async () => {
     try {
-      const [statsRes, channelsRes] = await Promise.all([
+      const [statsRes, channelsRes, ranbingStatsRes] = await Promise.all([
         getStats(),
         getChannels(),
+        getDashboardStats().catch(() => ({ data: null })),
       ]);
 
       // Handle stats response - API returns { total_agents, total_sessions, active_users, ... } directly
@@ -55,6 +58,11 @@ export default function Dashboard() {
           total_requests: statsData.total_requests ?? 1024,
           success_rate: statsData.success_rate ?? 98.5,
         });
+      }
+
+      // Handle ranbing stats
+      if (ranbingStatsRes?.data) {
+        setRanbingStats(ranbingStatsRes.data);
       }
 
       // Handle channels response - API returns { channels: [...] }
@@ -218,6 +226,19 @@ export default function Dashboard() {
                   <div>
                     <Text type="secondary" style={{ fontSize: 12 }}>通道在线</Text>
                     <div style={{ fontSize: 24, fontWeight: 600, color: '#262626' }}>{onlineCount}/{channels.length}</div>
+                  </div>
+                </div>
+              </Card>
+            </Col>
+            <Col xs={24} sm={12} md={6}>
+              <Card style={{ borderRadius: 8, boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }} bordered={false}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <div style={{ width: 48, height: 48, borderRadius: 8, background: '#f0f5ff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <CheckCircleOutlined style={{ fontSize: 24, color: '#722ed1' }} />
+                  </div>
+                  <div>
+                    <Text type="secondary" style={{ fontSize: 12 }}>业务 Agent</Text>
+                    <div style={{ fontSize: 24, fontWeight: 600, color: '#262626' }}>{ranbingStats?.total_agents ?? '-'}</div>
                   </div>
                 </div>
               </Card>
