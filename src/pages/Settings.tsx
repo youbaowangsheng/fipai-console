@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { Card, Descriptions, Button, Tag, Space } from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { getChannels, getStats } from '../utils/api';
+import { getDashboardStats } from '../utils/ranbingApi';
 
 export default function Settings() {
   const [testing, setTesting] = useState(false);
   const [gatewayStatus, setGatewayStatus] = useState<'ok' | 'error' | null>(null);
   const [middlewareStatus, setMiddlewareStatus] = useState<'ok' | 'error' | null>(null);
+  const [ranbingStatus, setRanbingStatus] = useState<'ok' | 'error' | null>(null);
 
   const handleTestGateway = () => {
     setTesting(true);
@@ -21,6 +23,14 @@ export default function Settings() {
     Promise.all([getChannels(), getStats()])
       .then(() => setMiddlewareStatus('ok'))
       .catch(() => setMiddlewareStatus('error'))
+      .finally(() => setTesting(false));
+  };
+
+  const handleTestRanbing = () => {
+    setTesting(true);
+    getDashboardStats()
+      .then(() => setRanbingStatus('ok'))
+      .catch(() => setRanbingStatus('error'))
       .finally(() => setTesting(false));
   };
 
@@ -47,6 +57,15 @@ export default function Settings() {
                 </Button>
                 {middlewareStatus === 'ok' && <Tag color="success" icon={<CheckCircleOutlined />}>正常</Tag>}
                 {middlewareStatus === 'error' && <Tag color="error" icon={<CloseCircleOutlined />}>异常</Tag>}
+              </Space>
+            </Descriptions.Item>
+            <Descriptions.Item label="Ranbing (8002)">
+              <Space>
+                <Button onClick={handleTestRanbing} loading={testing}>
+                  测试连接
+                </Button>
+                {ranbingStatus === 'ok' && <Tag color="success" icon={<CheckCircleOutlined />}>正常</Tag>}
+                {ranbingStatus === 'error' && <Tag color="error" icon={<CloseCircleOutlined />}>异常</Tag>}
               </Space>
             </Descriptions.Item>
           </Descriptions>
