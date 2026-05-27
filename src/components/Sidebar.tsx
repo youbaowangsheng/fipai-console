@@ -153,7 +153,7 @@ export default function Sidebar({ children }: SidebarProps) {
     <Layout style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Layout.Header style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        background: currentTheme.headerBg, padding: '0 16px', flex: '0 0 auto',
+        background: currentTheme.headerBg, padding: '0 24px', flex: '0 0 auto',
         boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
         borderBottom: theme === 'light' ? '1px solid #e8e8e8' : 'none'
       }}>
@@ -165,8 +165,8 @@ export default function Sidebar({ children }: SidebarProps) {
             style={{ color: currentTheme.headerText }}
           />
         )}
-        <div style={{ color: currentTheme.headerText, fontSize: 18, fontWeight: 'bold', letterSpacing: 1 }}>
-          {isMobile ? '🍳 FIP.AI' : '🍳 FIP.AI Console'}
+        <div style={{ color: currentTheme.headerText, fontSize: 20, fontWeight: 'bold', letterSpacing: 1 }}>
+          🍳 FIP.AI Console
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           {!isMobile && (

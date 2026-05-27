@@ -3,7 +3,7 @@ import { Card, Row, Col, Button, Space, Table, Tag, Typography, Badge, Empty, Sk
 import { ArrowUpOutlined, ReloadOutlined, SyncOutlined, CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 import { getStats, getChannels } from '../utils/api';
-import { getDashboardStats, getBusinessAgents } from '../utils/ranbingApi';
+import { getDashboardStats } from '../utils/ranbingApi';
 
 const { Title, Text } = Typography;
 const COLORS = ['#52c41a', '#ff4d4f'];

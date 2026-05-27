@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { message } from 'antd';
 
-// 燃冰 API 配置
-const RANBING_API = import.meta.env.VITE_RANBING_API || 'http://localhost:8002/api';
+// 燃冰 API 配置 - 通过 Console 反向代理
+const RANBING_API = import.meta.env.VITE_RANBING_API || '/api/ranbing';
 
 const ranbingApi = axios.create({
   baseURL: RANBING_API,
