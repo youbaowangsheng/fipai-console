@@ -42,11 +42,12 @@ export default function Auth({ onLogin }: Props) {
     const token = localStorage.getItem('console_token');
     if (token) {
       getUserInfo().then(res => {
-        setUser(res.data.user);
-        setIsLoggedIn(true);
+        if (res.data.success) {
+          setUser(res.data.user);
+          setIsLoggedIn(true);
+        }
       }).catch(() => {
-        localStorage.removeItem('console_token');
-        setIsLoggedIn(false);
+        // 401 错误静默处理，不清除 token，不跳转（Auth 页面自己处理登录状态）
       });
     }
   };
